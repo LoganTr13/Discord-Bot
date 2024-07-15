@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Client, GatewayIntentBits, SlashCommandBuilder} from 'discord.js';
+import { Client, GatewayIntentBits } from 'discord.js';
 import { commands } from "./commands";
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const bot_Token:string = process.env.TOKEN??"";
@@ -7,7 +7,10 @@ const bot_Token:string = process.env.TOKEN??"";
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
     for(const command of commands){
-        if (typeof command == 'object' && 'data' in command && 'execute' in command && interaction.commandName === command.data.name) {
+        if (typeof command == 'object' && 'data' in command && 'execute' in command) {
+            if (interaction.commandName != command.data.name) {
+                continue;
+            }
             command.execute(interaction);
             break;
         } else {
