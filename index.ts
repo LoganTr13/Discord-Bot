@@ -5,7 +5,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const bot_Token:string = process.env.TOKEN??"";
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    if (!interaction.isChatInputCommand()) return; //talvez de B.O. com as Reactions
     for(const command of commands){
         if (typeof command == 'object' && 'data' in command && 'execute' in command) {
             if (interaction.commandName != command.data.name) {
@@ -15,7 +15,7 @@ client.on('interactionCreate', async interaction => {
             break;
         } else {
             await interaction.reply({ content: 'Não encontrei o comando, utilize /help para saber a lista de comandos.', ephemeral: true });
-            console.error('Error ao ler comando: ', command);
+            console.error('Erro ao ler comando: ', command);
         }
     }
   });
