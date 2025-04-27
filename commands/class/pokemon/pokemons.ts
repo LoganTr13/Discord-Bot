@@ -11,7 +11,8 @@ export default class Pokemons {
   public async getList() {
     const response = await this.api.getPokemons();
     const pokemons = response.results.map(async (result) => {
-      return await this.getPokemon(result.name);
+      const pokemonData = await this.getPokemon(result.name);
+      return Pokemon.makeFromJson(pokemonData);
     });   
     return await Promise.all(pokemons); 
   }

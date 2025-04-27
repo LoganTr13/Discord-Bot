@@ -12,7 +12,7 @@ export default class Pokemon {
   public special_defense: number;
   public speed: number;
 
-  public static makeFromJson(data: object) {
+  public static makeFromJson<T>(data: T ) {
     const pokemon = new Pokemon();
     pokemon.id = data['id'];
     pokemon.name = data['name'];

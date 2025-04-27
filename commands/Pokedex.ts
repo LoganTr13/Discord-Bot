@@ -18,7 +18,7 @@ export default class Pokedex {
     let query = interaction.options.getString("pokemon");
     const embedSend = new Embeds();
     if (query) {
-      const response = await pokedex.getPokemon(query);
+      const response = await pokedex.getPokemon(query.toLowerCase());
       if (!response) {
         interaction.reply('Pokemon não encontrado!');
         return;
@@ -30,7 +30,9 @@ export default class Pokedex {
       ;
     };
     const response = await pokedex.getList();
-    console.log(response)
-    return await interaction.reply();
+    return await interaction.channel.send({
+      embeds: [await embedSend.renderList(response)],
+    })
+    ;
   };
 }
