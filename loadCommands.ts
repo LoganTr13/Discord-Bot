@@ -30,7 +30,6 @@ try {
   //     Routes.applicationCommand(client_id, command_id),
   //     { body: discordCommand },
   //   );
-
   console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 } catch (error) {
   // And of course, make sure you catch and log any errors!

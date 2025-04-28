@@ -30,6 +30,7 @@ export default class Pokedex {
       ;
     };
     const response = await pokedex.getList();
+    await interaction.reply(':arrows_counterclockwise: Pokedex Loading...')
     return await interaction.channel.send({
       embeds: [await embedSend.renderList(response)],
     })
