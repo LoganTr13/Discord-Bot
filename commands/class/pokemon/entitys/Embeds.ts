@@ -42,5 +42,6 @@ export default class Embeds {
       .setColor(0xf01e27)
       .setTitle("Pokedex")
       .setDescription(pokeListDescription)
+      .setThumbnail("https://raw.githubusercontent.com/LoganTr13/Discord-Bot/main/Assets/images/LedPokedex.png");
   }
 }
