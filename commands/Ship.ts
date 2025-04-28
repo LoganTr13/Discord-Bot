@@ -76,9 +76,11 @@ export default class Ship {
     const progressBar =
       "🟥".repeat(Math.floor(compatibility / 10)) +
       "⬜".repeat(10 - Math.floor(compatibility / 10));
+
     const userName1 = user1.username
     const userName2 = user2.username
     const nameShipp = userName1.slice(0,userName1.length / 2) + userName2.slice(-userName2.length / 2);
+    
     return await interaction.reply(`
       💖 **O Amor está no ar! Vamos ver quem vai formar um duo?** 💖
 

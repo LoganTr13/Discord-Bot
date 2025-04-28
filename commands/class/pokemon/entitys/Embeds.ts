@@ -30,13 +30,17 @@ export default class Embeds {
       .setThumbnail(pokemon.icon);
   }
   public renderList(list: entityPokemon[]) {
-    console.log(list)
-    const pokeList: { name: string; value: string }[] = list.map((pokemon) => {
-      return { name: emojiPokeball + " " + pokemon.name + " - [ " + pokemon.id.toString() +" ]", value: " ", inline:true};
-    });
+    const pokeListDescription = list.map((pokemon, index) => {
+
+      const name = `${emojiPokeball} **${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}**`;
+      const id = pokemon.id;
+
+      return `\`${index + 1}.\` ${name} - **#${id}**`;
+    }).join("\n");
+
     return new EmbedBuilder()
       .setColor(0xf01e27)
       .setTitle("Pokedex")
-      .setFields(pokeList);
+      .setDescription(pokeListDescription)
   }
 }
