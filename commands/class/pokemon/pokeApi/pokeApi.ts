@@ -15,8 +15,8 @@ type GetPokemonResponse = {
 export default class PokeApi {
   private readonly baseUrl: string = "https://pokeapi.co/api/v2";
 
-  public async getPokemons() {
-    const url: string = `${this.baseUrl}/pokemon`;
+  public async getPokemons(offset = 0, limit=20) {
+    const url: string = `${this.baseUrl}/pokemon?offset=${offset}&limit=${limit}`;
     return await fetch(url).then<GetPokemonsListResponse>((response) =>
       response.json()
     );

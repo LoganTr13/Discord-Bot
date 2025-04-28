@@ -8,8 +8,8 @@ export default class Pokemons {
     this.limit = value;
   }
 
-  public async getList() {
-    const response = await this.api.getPokemons();
+  public async getList(offset, limit) {
+    const response = await this.api.getPokemons(offset,limit);
     const pokemons = response.results.map(async (result) => {
       const pokemonData = await this.getPokemon(result.name);
       return Pokemon.makeFromJson(pokemonData);
