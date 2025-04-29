@@ -1,4 +1,3 @@
-import MCStatus from "./class/mcserver/mcStatus";
 import Dice from "./Dice";
 import MCServer from "./MCServer";
 import Ping from "./Ping";
