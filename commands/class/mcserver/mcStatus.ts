@@ -1,4 +1,3 @@
-import ApiError from "../ApiError/ApiError";
 import Server from "./entitys/Server";
 
 export enum minecraftEdition {
@@ -24,7 +23,6 @@ export default class MCStatus {
     console.log("[REQUEST] Executando requisição a : " + url);
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
     return await Server.make(data)
   }
 }
