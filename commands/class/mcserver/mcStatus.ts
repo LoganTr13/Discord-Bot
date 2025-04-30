@@ -22,7 +22,11 @@ export default class MCStatus {
     const url = `${this.base_url}/${this.edition}/${ip}`;
     console.log("[REQUEST] Executando requisição a : " + url);
     const response = await fetch(url);
+    console.log(response);
     const data = await response.json();
+    if (!data.ip_address) {
+      return null
+    }
     return await Server.make(data)
   }
 }

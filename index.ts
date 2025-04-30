@@ -12,7 +12,7 @@ const client = new Client({
 const bot_Token:string = process.env.TOKEN??"";
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isChatInputCommand()) return; //talvez de B.O. com as Reactions
+    if (!interaction.isChatInputCommand()) return;
     for(const command of commands){
         if (typeof command == 'object' && 'data' in command && 'execute' in command) {
             if (interaction.commandName != command.data.name) {

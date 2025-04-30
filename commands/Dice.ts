@@ -1,50 +1,58 @@
 import {
+  ChatInputCommandInteraction,
   SlashCommandBuilder,
   SlashCommandIntegerOption,
   SlashCommandStringOption,
 } from "discord.js";
+
+const filterModifier = (modifier: string) => {
+  return modifier.replace(/[^0-9*/()+-]/g, "");
+};
+const normalizeModifier = (modifier: string) => {
+  return modifier[0] == "(" ? "+" + modifier : modifier;
+};
 export default class Dice {
-  private readonly dices: number[] = [2, 4, 6, 8, 10, 12, 20, 100];
+  private readonly rollableDices: number[] = [2, 4, 6, 8, 10, 12, 20, 100];
+
   public readonly data = new SlashCommandBuilder()
     .setName("d")
     .setDescription("Roll dice")
-    .addIntegerOption(this.optionSides)
-    .addStringOption(this.optionMod);
+    .addIntegerOption((option: SlashCommandIntegerOption) =>
+      option
+        .setName("sides")
+        .setDescription("Quantidade de lados do dado")
+        .setRequired(true)
+    )
+    .addStringOption((option: SlashCommandStringOption) =>
+      option.setName("mod").setDescription("Modificador do dado (Opcional)")
+    );
 
-  optionSides(option: SlashCommandIntegerOption) {
-    return option
-      .setName("sides")
-      .setDescription("Quantidade de lados do dado")
-      .setRequired(true);
-  };
+  public readonly execute = async ( interaction: ChatInputCommandInteraction ) => {
+    let sides: number = interaction.options.getInteger("sides", true);
+    let modifier: string | null = interaction.options.getString("mod");
+    let responseModifier = "";
 
-  optionMod(option: SlashCommandStringOption) {
-    return option
-      .setName("mod")
-      .setDescription("Modificador do dado (Opcional)");
-  };
-
-  public readonly execute = async (interaction: any) => {
-    let sides = interaction.options.getInteger("sides");
-    let mod = interaction.options.getString("mod");
-    let responseMod = "";
-
-    for (let i = 0; i < this.dices.length - 1; i++) {
-      if (sides > this.dices[i]) break;
-      sides = this.dices[i];
+    // Corrige dado informado para um Dado Rolavel
+    for (let i = 0; i < this.rollableDices.length - 1; i++) {
+      if (sides > this.rollableDices[i]) break;
+      sides = this.rollableDices[i];
     }
 
-    const result = Math.floor(Math.random() * sides) + 1;
+    const rolledValue = Math.floor(Math.random() * sides) + 1;
 
-    if (mod) {
-      mod = mod.replace(/[^0-9*/()+-]/g, ""); //filtra os caracteres
-      mod = mod[0] == "(" ? "+" + mod : mod;
-      responseMod = "\n Result: " + result + "\t Mod: " + mod;
+    if (modifier) {
+      modifier = filterModifier(modifier);
+      modifier = normalizeModifier(modifier);
+      responseModifier =
+        "\n Result: " + rolledValue + "\t modifier: " + modifier;
+    } else {
+      modifier = "";
     }
 
-    const resultPrint = eval(result + mod);
+    const resultPrint =
+      typeof modifier === "string" ? eval(rolledValue + modifier) : rolledValue;
     await interaction.reply(
-      ":game_die: D" + sides + ": " + resultPrint + responseMod
+      ":game_die: D" + sides + ": " + resultPrint + responseModifier
     );
   };
 }

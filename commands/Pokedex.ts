@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import Pokemons from "./class/pokemon/pokemons";
 import Embeds from "./class/pokemon/entitys/Embeds";
 
@@ -6,7 +6,7 @@ export default class Pokedex {
   public readonly data = new SlashCommandBuilder()
     .setName("pokedex")
     .setDescription("Consulta infomações dos pokemons.")
-    .addStringOption((option) =>
+    .addStringOption((option: SlashCommandStringOption) =>
       option
         .setName("pokemon")
         .setDescription("Pesquisa um pokemon")
@@ -25,7 +25,6 @@ export default class Pokedex {
         interaction.reply("Pokemon não encontrado!");
         return;
       }
-
       await interaction.reply("Pokemon Localizado!");
       return await interaction.channel.send({
         embeds: [await embedSend.renderPokemon(response)],
