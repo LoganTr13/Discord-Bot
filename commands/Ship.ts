@@ -1,94 +1,86 @@
-import { SlashCommandBuilder } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+  SlashCommandUserOption,
+  User,
+} from "discord.js";
 
+const sentences = [
+  { max: 0, message: "Vocês são inimigos Mortais :skull:" },
+  { max: 10, message: "Talvez conhecidos? :thinking:" },
+  { max: 20, message: "Se pá nem colegas :clown:" },
+  { max: 30, message: "Melhor ficar apenas na amizade :pleading_face:" },
+  { max: 40, message: "Para a amizade vocês são otimos, agora pra avançar... :confused:" },
+  { max: 50, message: "Ja são melhores amigos e isso esta otimo! :saluting_face:" },
+  { max: 60, message: "Hmmm... parece que a amizade pode ficar mais quente :fire:" },
+  { max: 70, message: "Imagino se algum dos dois tem crush um no outro :thinking:" },
+  { max: 80, message: "Já podem começar a namora :face_with_hand_over_mouth:" },
+  { max: 90, message: "E não tão namorando pq?! :eyes:" },
+  { max: 99, message: "O casamento é quando ? :smirk:" },
+  { max: 100, message: "Ja tem casa, filhos e um carro :flushed:" },
+];
+
+const getCompatibilityMessage = (points: number): { message: string } => {
+  const message = sentences.find(({ max }) => points <= max);
+  if (!message) {
+    return { message: " Tivemos um erro de compatibilidade ┐(￣ヘ￣;)┌" };
+  }
+  return message;
+};
+
+const renderProgressBar = (compatibility, size): string => {
+  const amountEmoji = Math.floor(compatibility / 10);
+  return "🟥".repeat(amountEmoji) + "⬜".repeat(size - amountEmoji);
+};
+
+const calcCompatibility = (id1: string, id2: string): number => {
+  const combined = id1 + id2;
+  const sumCharCodes = [...combined].reduce(
+    (sum, char) => sum + char.charCodeAt(0),
+    0
+  );
+  return (sumCharCodes * 3) % 101;
+};
 export default class Ship {
   public readonly data = new SlashCommandBuilder()
     .setName("ship")
     .setDescription("Vamos ver ser o casal vai dar certo ou não?")
-    .addUserOption((option) =>
+    .addUserOption((option: SlashCommandUserOption) =>
       option
         .setName("user1")
         .setDescription("Primeiro Pombinho")
         .setRequired(true)
     )
-    .addUserOption((option) =>
+    .addUserOption((option: SlashCommandUserOption) =>
       option
         .setName("user2")
         .setDescription("Segundo Pombinho")
         .setRequired(true)
     );
 
-  public readonly execute = async (interaction: any) => {
-    const user1 = interaction.options.getUser("user1");
-    const user2 = interaction.options.getUser("user2");
+  public readonly execute = async ( interaction: ChatInputCommandInteraction ) => {
+    const user1: User = interaction.options.getUser("user1", true);
+    const user2: User = interaction.options.getUser("user2", true);
 
-    const usersConcat: string = user1 + user2;
-    const sumFromCharCodes = [...usersConcat].reduce(
-      (sum, char) => sum + char.charCodeAt(0),
-      0
-    );
-    const compatibility = (sumFromCharCodes * 3) % 101;
+    const compatibility = calcCompatibility(user1.id, user2.id);
 
-    let text;
+    const result = getCompatibilityMessage(compatibility);
 
-    switch (true) {
-      case compatibility === 0:
-        text = "Vocês são inimigos Mortais :skull:";
-        break;
-      case compatibility <= 10:
-        text = "Talvez conhecidos? :thinking:";
-        break;
-      case compatibility <= 20:
-        text = "Se pá nem colegas :clown:";
-        break;
-      case compatibility <= 30:
-        text = "Melhor ficar apenas na amizade :pleading_face:";
-        break;
-      case compatibility <= 40:
-        text =
-          "Para a amizade vocês são otimos, agora pra avançar... :confused:";
-        break;
-      case compatibility <= 50:
-        text = "Ja são melhores amigos e isso esta otimo! :saluting_face:";
-        break;
-      case compatibility <= 60:
-        text = "Hmmm... parece que a amizade pode ficar mais quente :fire:";
-        break;
-      case compatibility <= 70:
-        text = "Imagino se algum dos dois tem crush um no outro :thinking:";
-        break;
-      case compatibility <= 80:
-        text = "Já podem começar a namora :face_with_hand_over_mouth:";
-        break;
-      case compatibility <= 90:
-        text = "E não tão namorando pq?! :eyes:";
-        break;
-      case compatibility <= 99:
-        text = "O casamento é quando ? :smirk:";
-        break;
-      case compatibility === 100:
-        text = "Ja tem casa, filhos e um carro :flushed:";
-        break;
-      default:
-        text = "Erro: valor de compatibilidade inválido.";
-        break;
-    }
+    const userName1 = user1.username;
+    const userName2 = user2.username;
 
-    const progressBar =
-      "🟥".repeat(Math.floor(compatibility / 10)) +
-      "⬜".repeat(10 - Math.floor(compatibility / 10));
+    const nameShipp =
+      userName1.slice(0, userName1.length / 2) +
+      userName2.slice(-userName2.length / 2);
 
-    const userName1 = user1.username
-    const userName2 = user2.username
-    const nameShipp = userName1.slice(0,userName1.length / 2) + userName2.slice(-userName2.length / 2);
-    
     return await interaction.reply(`
       💖 **O Amor está no ar! Vamos ver quem vai formar um duo?** 💖
 
       👩‍❤️‍👨 <@${user1.id}> + <@${user2.id}> = ${nameShipp}
-  ${text}
+  ${result.message}
 
       Compatibilidade:
-      ${progressBar} **${compatibility}%**
+      ${renderProgressBar(compatibility, 10)} **${compatibility}%**
       `);
   };
 }

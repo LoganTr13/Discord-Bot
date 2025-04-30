@@ -8,8 +8,8 @@ export default class Embeds {
 
       const info = [
         { name: "**Status: **", value: textOnline, inline: true },
-        { name: "\u200B", value: "\u200B", inline: true },
         { name: "**Versão: **", value: data.version, inline: true },
+        { name: "\u200B", value: "\u200B", inline: true },
         { name: "**Players Online: **", value: `${data.players.online}`, inline: true },
         { name: "**Max Players: **", value: `${data.players.max}`, inline: true },
       ];
