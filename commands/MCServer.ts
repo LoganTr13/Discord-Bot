@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
+import { SlashCommandBooleanOption, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import { minecraftEdition } from "./class/mcserver/mcStatus.ts";
 import MCStatus from "./class/mcserver/mcStatus.ts";
 import Embeds from "./class/mcserver/entitys/Embeds.ts";
@@ -26,6 +26,9 @@ export default class MCServer {
 
     if(isBedrock){
         api.setEdition(minecraftEdition.Bedrock);
+    }
+    if(interaction.channel){
+      console.log(interaction.channel)
     }
     console.log('[QUERY] Buscando informações do ip ' + IPServer);
     const embedServer = new Embeds();
