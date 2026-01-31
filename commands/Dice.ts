@@ -1,5 +1,6 @@
 import {
   ChatInputCommandInteraction,
+  discordSort,
   SlashCommandBuilder,
   SlashCommandIntegerOption,
   SlashCommandStringOption,
@@ -28,17 +29,30 @@ export default class Dice {
     );
 
   public readonly execute = async ( interaction: ChatInputCommandInteraction ) => {
-    let sides: number = interaction.options.getInteger("sides", true);
+    let MaxSides: number = interaction.options.getInteger("sides", true);
     let modifier: string | null = interaction.options.getString("mod");
     let responseModifier = "";
 
     // Corrige dado informado para um Dado Rolavel
-    for (let i = 0; i < this.rollableDices.length - 1; i++) {
-      if (sides > this.rollableDices[i]) break;
-      sides = this.rollableDices[i];
+    for (let i = 0; i < this.rollableDices.length; i++) {
+      const currentSide:number = this.rollableDices[i];
+      const nextSide:number = this.rollableDices[i + 1];
+      const currentDistance:number = Math.abs(currentSide - MaxSides);
+      const nextDistance:number = Math.abs(nextSide - MaxSides);
+
+      if(MaxSides > nextSide){
+        continue
+      }
+      if (currentDistance <= nextDistance || isNaN(nextSide)){
+        MaxSides = currentSide
+        break
+      }else{
+        MaxSides = nextSide
+        break
+      }
     }
 
-    const rolledValue = Math.floor(Math.random() * sides) + 1;
+    const rolledValue = Math.floor(Math.random() * Number(MaxSides)) + 1;
 
     if (modifier) {
       modifier = filterModifier(modifier);
@@ -52,7 +66,7 @@ export default class Dice {
     const resultPrint =
       typeof modifier === "string" ? eval(rolledValue + modifier) : rolledValue;
     await interaction.reply(
-      ":game_die: D" + sides + ": " + resultPrint + responseModifier
+      ":game_die: D" + MaxSides + ": " + resultPrint + responseModifier
     );
   };
 }
