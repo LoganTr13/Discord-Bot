@@ -28,7 +28,7 @@ const getCompatibilityMessage = (points: number): { message: string } => {
   return message;
 };
 
-const renderProgressBar = (compatibility, size): string => {
+const renderProgressBar = (compatibility: number, size: number): string => {
   const amountEmoji = Math.floor(compatibility / 10);
   return "🟥".repeat(amountEmoji) + "⬜".repeat(size - amountEmoji);
 };

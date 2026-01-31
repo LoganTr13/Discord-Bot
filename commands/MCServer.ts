@@ -27,9 +27,6 @@ export default class MCServer {
     if(isBedrock){
         api.setEdition(minecraftEdition.Bedrock);
     }
-    if(interaction.channel){
-      console.log(interaction.channel)
-    }
     console.log('[QUERY] Buscando informações do ip ' + IPServer);
     const embedServer = new Embeds();
     const data = await api.getStatus(IPServer);

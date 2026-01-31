@@ -18,14 +18,18 @@ export default class MCStatus {
     this.edition = editionSelected;
   }
 
-  public async getStatus(ip) {
+  public async getStatus(ip: string) {
     const url = `${this.base_url}/${this.edition}/${ip}`;
     console.log("[REQUEST] Executando requisição a : " + url);
     const response = await fetch(url);
-    console.log(response);
     const data = await response.json();
+    console.log(data);
     if (!data.ip_address) {
       return null
+    }
+    if (!data.online){
+      return
+      
     }
     return await Server.make(data)
   }

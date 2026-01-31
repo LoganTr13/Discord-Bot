@@ -7,7 +7,7 @@ export default class Server {
     public readonly motd: string,
     public readonly icon: string
   ) {}
-  public static make<T>(data: T) {
+  public static make(data: any) {
     return new Server(
       data["online"],
       data["host"],

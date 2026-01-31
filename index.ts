@@ -28,3 +28,4 @@ client.on('interactionCreate', async interaction => {
   });
 
 client.login(bot_Token);
+console.log('Bot On!!!!!')
